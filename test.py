@@ -1,11 +1,13 @@
 import subprocess
+import os
+import hashlib
 
-API_KEY = "sk-1234567890abcdef"
-password = "supersecret123"
+API_KEY = os.environ.get('API_KEY')
+password = hashlib.sha256(os.environ.get('PASSWORD').encode()).hexdigest()
 
 def get_user(user_id):
-    query = "SELECT * FROM users WHERE id = " + user_id
-    return db.execute(query)
+    query = "SELECT * FROM users WHERE id = %s"
+    return db.execute(query, (user_id,))
 
 def find_duplicates(items):
     duplicates = []
@@ -17,5 +19,3 @@ def find_duplicates(items):
 
 def a(x, y):
     return x+y
-
-# test change
