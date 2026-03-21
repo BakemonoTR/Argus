@@ -2,6 +2,7 @@ from typing import TypedDict, List
 
 class PipelineState(TypedDict):
     pr_diff: str
+    files_changed: List[str]          # ← yeni eklendi
 
     security_findings: List[dict]
     performance_findings: List[dict]
@@ -13,7 +14,6 @@ class PipelineState(TypedDict):
     style_summary: str
     test_summary: str
 
-    # Debate agent output
     conflicts: List[dict]
     critical_issues: List[str]
     should_autofix: bool
