@@ -13,11 +13,11 @@ USE_FAKE_DIFF = os.getenv("USE_FAKE_DIFF", "true").lower() == "true"
 if USE_FAKE_DIFF:
     pr_diff = """
 + import subprocess
-+ password = "admin123"
-+ API_KEY = "sk-1234567890abcdef"
++ password = os.getenv("DB_PASSWORD")
++ API_KEY = os.getenv("API_KEY")
 + def run_query(user_input):
-+     query = "SELECT * FROM users WHERE id = " + user_input
-+     return db.execute(query)
++     query = "SELECT * FROM users WHERE id = %s"
++     return db.execute(query, (user_input,))
 +
 + def find_duplicates(items):
 +     duplicates = []
