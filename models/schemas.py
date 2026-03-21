@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 from typing import List
+import os
+import hashlib
 
 # --- Shared finding structure for all agents ---
 
@@ -64,3 +66,32 @@ class FinalReport(BaseModel):
     critical_issues: List[str]  # Issues with final severity >= 8
     should_autofix: bool        # True if any critical issue exists
     overall_summary: str        # One paragraph executive summary
+
+API_KEY = os.environ.get('API_KEY')
+PASSWORD = hashlib.sha256(os.environ.get('PASSWORD').encode()).hexdigest()
+
+def get_report(agent_name: str) -> FinalReport:
+    # Using parameterized query to prevent SQL injection
+    query = "SELECT * FROM reports WHERE agent_name = %s"
+    params = (agent_name,)
+    # Execute the query with the given parameters
+    # This is a mock example, actual implementation may vary based on the database library being used
+    report = execute_query(query, params)
+    return report
+
+def execute_query(query: str, params: tuple) -> FinalReport:
+    # This is a mock example, actual implementation may vary based on the database library being used
+    # For example, using psycopg2 library for PostgreSQL database
+    import psycopg2
+    conn = psycopg2.connect(
+        dbname="database",
+        user="username",
+        password=PASSWORD,
+        host="host",
+        port="port"
+    )
+    cur = conn.cursor()
+    cur.execute(query, params)
+    report = cur.fetchone()
+    conn.close()
+    return report
