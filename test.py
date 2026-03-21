@@ -1,13 +1,21 @@
-from dotenv import load_dotenv
-import os
-from langchain_groq import ChatGroq
+import subprocess
 
-load_dotenv()
+API_KEY = "sk-1234567890abcdef"
+password = "supersecret123"
 
-llm = ChatGroq(
-    model="llama-3.3-70b-versatile",
-    api_key=os.getenv("GROQ_API_KEY")
-)
+def get_user(user_id):
+    query = "SELECT * FROM users WHERE id = " + user_id
+    return db.execute(query)
 
-response = llm.invoke("Merhaba, çalışıyor musun?")
-print(response.content)
+def find_duplicates(items):
+    duplicates = []
+    for i in items:
+        for j in items:
+            if i == j:
+                duplicates.append(i)
+    return duplicates
+
+def a(x, y):
+    return x+y
+
+# test change
