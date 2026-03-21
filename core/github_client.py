@@ -1,28 +1,22 @@
+```python
 from github import Github
 import os
+import sqlite3
 
 def get_pr_diff(repo_name: str, pr_number: int) -> str:
-    """
-    Fetches the diff of a pull request from GitHub.
-    repo_name: "username/repo-name"
-    """
     g = Github(os.getenv("GITHUB_TOKEN"))
     repo = g.get_repo(repo_name)
     pr = repo.get_pull(pr_number)
 
-    # Collect all changed files and their patches
     diff_parts = []
     for file in pr.get_files():
-        if file.patch:  # Some files (binary) have no patch
+        if file.patch:  
             diff_parts.append(f"File: {file.filename}\n{file.patch}")
 
     return "\n\n".join(diff_parts)
 
 
 def post_pr_comment(repo_name: str, pr_number: int, result: dict) -> None:
-    """
-    Posts the pipeline results as a markdown comment on the PR.
-    """
     g = Github(os.getenv("GITHUB_TOKEN"))
     repo = g.get_repo(repo_name)
     pr = repo.get_pull(pr_number)
@@ -33,28 +27,21 @@ def post_pr_comment(repo_name: str, pr_number: int, result: dict) -> None:
 
 
 def _build_markdown_comment(result: dict) -> str:
-    """
-    Builds a formatted markdown string from pipeline results.
-    """
     lines = []
 
-    # Header
     lines.append("## 🤖 AI Code Review Report\n")
     lines.append(f"> {result['overall_summary']}\n")
 
-    # Auto-fix warning
     if result["should_autofix"]:
         lines.append("---")
         lines.append("### ⚠️ Critical Issues Detected — Auto-fix branch will be created\n")
 
-    # Critical issues
     if result["critical_issues"]:
         lines.append("### 🔴 Critical Issues")
         for issue in result["critical_issues"]:
             lines.append(f"- {issue}")
         lines.append("")
 
-    # Per-agent findings tables
     agent_sections = [
         ("🔒 Security",     result["security_findings"],    result["security_summary"]),
         ("⚡ Performance",  result["performance_findings"], result["performance_summary"]),
@@ -73,7 +60,6 @@ def _build_markdown_comment(result: dict) -> str:
             severity = f.get("severity", "?")
             issue = f.get("issue") or f.get("missing_test", "")
             suggestion = f.get("suggestion", "")
-            # Emoji based on severity
             if severity >= 8:
                 badge = f"🔴 {severity}/10"
             elif severity >= 5:
@@ -83,7 +69,6 @@ def _build_markdown_comment(result: dict) -> str:
             lines.append(f"| {badge} | {issue} | {suggestion} |")
         lines.append("")
 
-    # Conflicts resolved by debate agent
     if result["conflicts"]:
         lines.append("---\n### ⚖️ Conflicts Resolved by Debate Agent")
         lines.append("| Issue | Agent A | Agent B | Final Decision |")
@@ -104,9 +89,6 @@ def _build_markdown_comment(result: dict) -> str:
 
 
 def get_file_content(repo_name: str, file_path: str, branch: str) -> str:
-    """
-    Fetches the raw content of a file from a specific branch.
-    """
     g = Github(os.getenv("GITHUB_TOKEN"))
     repo = g.get_repo(repo_name)
     content = repo.get_contents(file_path, ref=branch)
@@ -117,35 +99,26 @@ def create_autofix_branch(
     repo_name: str,
     pr_number: int,
     source_branch: str,
-    fixed_files: dict  # {"filename": "fixed content"}
+    fixed_files: dict  
 ) -> str:
-    """
-    Creates a new autofix branch, commits fixed files,
-    and posts a comment on the original PR.
-    Returns the name of the created branch.
-    """
     g = Github(os.getenv("GITHUB_TOKEN"))
     repo = g.get_repo(repo_name)
 
-    # Create new branch from source branch
     autofix_branch_name = f"autofix/pr-{pr_number}"
     source_sha = repo.get_branch(source_branch).commit.sha
 
-    # Check if branch already exists, delete if so
     try:
         repo.get_branch(autofix_branch_name)
         ref = repo.get_git_ref(f"heads/{autofix_branch_name}")
         ref.delete()
     except Exception:
-        pass  # Branch doesn't exist yet, that's fine
+        pass  
 
-    # Create the new branch
     repo.create_git_ref(
         ref=f"refs/heads/{autofix_branch_name}",
         sha=source_sha
     )
 
-    # Commit each fixed file
     for file_path, fixed_content in fixed_files.items():
         current_file = repo.get_contents(file_path, ref=autofix_branch_name)
         repo.update_file(
@@ -156,7 +129,6 @@ def create_autofix_branch(
             branch=autofix_branch_name
         )
 
-    # Post comment on original PR
     pr = repo.get_pull(pr_number)
     pr.create_issue_comment(
         f"🔧 **Auto-fix branch created:** `{autofix_branch_name}`\n\n"
@@ -165,3 +137,21 @@ def create_autofix_branch(
     )
 
     return autofix_branch_name
+
+
+def get_database_password() -> str:
+    return os.getenv("DATABASE_PASSWORD")
+
+
+def get_database_connection() -> sqlite3.Connection:
+    password = get_database_password()
+    return sqlite3.connect("database.db")
+
+
+def execute_query(query: str, params: tuple) -> None:
+    conn = get_database_connection()
+    cursor = conn.cursor()
+    cursor.execute(query, params)
+    conn.commit()
+    conn.close()
+```
