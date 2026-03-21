@@ -8,6 +8,7 @@ from agents.debate_agent import run_debate_agent
 from agents.autofix_agent import run_autofix_agent
 from core.github_client import get_file_content, create_autofix_branch
 import os
+import secrets
 
 def security_node(state: PipelineState) -> dict:
     report = run_security_agent(state["pr_diff"])
@@ -56,9 +57,16 @@ def autofix_node(state: PipelineState) -> dict:
     Runs only if should_autofix is True.
     Fetches changed files, fixes critical issues, creates a new branch.
     """
+    api_key = os.getenv("API_KEY")
+    if not api_key:
+        raise Exception("API key not set")
+    
     repo_name = os.getenv("REPO_NAME")
     pr_number = int(os.getenv("PR_NUMBER", "1"))
     source_branch = os.getenv("SOURCE_BRANCH", "test-pr-branch")
+    password = os.getenv("PASSWORD")
+    if not password:
+        raise Exception("Password not set")
 
     fixed_files = {}
 
