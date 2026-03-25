@@ -5,6 +5,10 @@ inputs:
   groq_api_key:
     description: 'Groq API key'
     required: true
+  autofix:
+    description: 'Automatically create a fix branch for critical issues'
+    required: false
+    default: 'false'
 
 runs:
   using: 'composite'
@@ -26,3 +30,4 @@ runs:
         REPO_NAME: ${{ github.repository }}
         PR_NUMBER: ${{ github.event.number }}
         USE_FAKE_DIFF: "false"
+        AUTOFIX: ${{ inputs.autofix }}

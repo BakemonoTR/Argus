@@ -85,10 +85,8 @@ def autofix_node(state: PipelineState) -> dict:
     return {}  # No state update needed
 
 def should_run_autofix(state: PipelineState) -> str:
-    """
-    Conditional edge: run autofix only if should_autofix is True.
-    """
-    if state.get("should_autofix"):
+    autofix_enabled = os.getenv("AUTOFIX", "false").lower() == "true"
+    if state.get("should_autofix") and autofix_enabled:
         return "autofix_agent"
     return END
 

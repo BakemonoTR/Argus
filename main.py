@@ -68,6 +68,8 @@ print(f"Overall: {result['overall_summary']}")
 print(f"Critical issues: {result['critical_issues']}")
 print(f"Auto-fix needed: {result['should_autofix']}\n")
 
+
+
 if not USE_FAKE_DIFF:
     print("Posting comment to GitHub PR...")
     post_pr_comment(REPO_NAME, PR_NUMBER, result)
