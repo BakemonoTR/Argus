@@ -1,0 +1,28 @@
+name: 'Autonomous Quality Pipeline'
+description: 'AI-powered multi-agent code review for pull requests'
+
+inputs:
+  groq_api_key:
+    description: 'Groq API key'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: pip install -r ${{ github.action_path }}/requirements.txt
+      shell: bash
+
+    - name: Run AI pipeline
+      run: python ${{ github.action_path }}/main.py
+      shell: bash
+      env:
+        GROQ_API_KEY: ${{ inputs.groq_api_key }}
+        GITHUB_TOKEN: ${{ github.token }}
+        REPO_NAME: ${{ github.repository }}
+        PR_NUMBER: ${{ github.event.number }}
+        USE_FAKE_DIFF: "false"
