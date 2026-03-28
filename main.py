@@ -41,7 +41,7 @@ else:
 
     # Pass source branch to env so autofix_node can use it
     os.environ["SOURCE_BRANCH"] = pr.head.ref
-
+print(f"LANGUAGE env: {os.getenv('LANGUAGE', 'NOT SET')}")
 graph = build_graph()
 
 initial_state = {
