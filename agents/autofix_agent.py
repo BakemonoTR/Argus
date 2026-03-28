@@ -19,7 +19,7 @@ You will be given code with critical security and performance issues.
 Fix ONLY the critical issues listed. Do not refactor or change anything else.
 Return ONLY the fixed code, no explanations, no markdown code blocks. Respond in {language} language."""
 
-    human_prompt = f"""Fix the following critical issues in this code:
+    human_prompt = f"""Fix the following critical issues in this code: Respond in {language} language.
 
 CRITICAL ISSUES TO FIX:
 {issues_text}

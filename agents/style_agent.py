@@ -22,7 +22,7 @@ Look for: naming convention violations, dead code, functions that are too long,
 missing docstrings, high complexity, magic numbers.
 Only report issues you actually see. Do not fabricate findings. Respond in {language} language."""
 
-    human_prompt = f"""Analyze the following PR diff for code style and quality issues:
+    human_prompt = f"""Analyze the following PR diff for code style and quality issues: Respond in {language} language.
 
 {pr_diff}"""
 

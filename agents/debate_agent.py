@@ -41,7 +41,7 @@ Be fair and precise. If two agents disagree, consider both perspectives. Respond
         "test_agent": test_findings
     }
 
-    human_prompt = f"""Review the following findings from all agents and produce a final report:
+    human_prompt = f"""Review the following findings from all agents and produce a final report: Respond in {language} language.
     
 {json.dumps(all_findings, indent=2)}
 """

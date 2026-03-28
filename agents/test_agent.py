@@ -22,7 +22,7 @@ Look for: new functions without tests, uncovered edge cases,
 missing error handling tests.
 Also write the actual pytest test code for the missing cases in suggested_tests field. Respond in {language} language."""
 
-    human_prompt = f"""Analyze the following PR diff for missing test coverage:
+    human_prompt = f"""Analyze the following PR diff for missing test coverage: Respond in {language} language.
 
 {pr_diff}"""
 

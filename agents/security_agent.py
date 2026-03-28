@@ -21,7 +21,7 @@ Analyze the given PR diff and identify security vulnerabilities.
 Scan based on OWASP Top 10: hardcoded passwords/API keys, SQL injection, XSS, unsafe imports.
 Only report issues you actually see in the code. Do not fabricate findings. Respond in {language} language."""
 
-    human_prompt = f"""Analyze the following PR diff for security issues:
+    human_prompt = f"""Analyze the following PR diff for security issues. Respond in {language} language.
 
 {pr_diff}"""
 

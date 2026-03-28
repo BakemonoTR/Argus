@@ -22,7 +22,7 @@ Look for: O(n²) or worse loops, database queries inside loops (N+1 problem),
 repeated expensive computations, unnecessary memory allocations.
 Only report issues you actually see. Do not fabricate findings. Respond in {language} language."""
 
-    human_prompt = f"""Analyze the following PR diff for performance issues:
+    human_prompt = f"""Analyze the following PR diff for performance issues: Respond in {language} language.
 
 {pr_diff}"""
 
