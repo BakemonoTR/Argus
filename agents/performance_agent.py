@@ -15,12 +15,12 @@ def run_performance_agent(pr_diff: str) -> PerformanceReport:
     )
 
     structured_llm = llm.with_structured_output(PerformanceReport)
-
-    system_prompt = """You are a performance-focused code reviewer.
+    language = os.getenv("LANGUAGE", "en")
+    system_prompt = f"""You are a performance-focused code reviewer.
 Analyze the given PR diff and identify performance issues.
 Look for: O(n²) or worse loops, database queries inside loops (N+1 problem),
 repeated expensive computations, unnecessary memory allocations.
-Only report issues you actually see. Do not fabricate findings."""
+Only report issues you actually see. Do not fabricate findings. Respond in {language} language."""
 
     human_prompt = f"""Analyze the following PR diff for performance issues:
 

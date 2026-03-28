@@ -15,12 +15,12 @@ def run_style_agent(pr_diff: str) -> StyleReport:
     )
 
     structured_llm = llm.with_structured_output(StyleReport)
-
-    system_prompt = """You are a code quality reviewer.
+    language = os.getenv("LANGUAGE", "en")
+    system_prompt = f"""You are a code quality reviewer.
 Analyze the given PR diff and identify style and maintainability issues.
 Look for: naming convention violations, dead code, functions that are too long,
 missing docstrings, high complexity, magic numbers.
-Only report issues you actually see. Do not fabricate findings."""
+Only report issues you actually see. Do not fabricate findings. Respond in {language} language."""
 
     human_prompt = f"""Analyze the following PR diff for code style and quality issues:
 

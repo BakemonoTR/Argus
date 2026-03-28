@@ -15,12 +15,12 @@ def run_test_agent(pr_diff: str) -> TestReport:
     )
 
     structured_llm = llm.with_structured_output(TestReport)
-
-    system_prompt = """You are a test coverage reviewer.
+    language = os.getenv("LANGUAGE", "en")
+    system_prompt = f"""You are a test coverage reviewer.
 Analyze the given PR diff and identify missing tests.
 Look for: new functions without tests, uncovered edge cases,
 missing error handling tests.
-Also write the actual pytest test code for the missing cases in suggested_tests field."""
+Also write the actual pytest test code for the missing cases in suggested_tests field. Respond in {language} language."""
 
     human_prompt = f"""Analyze the following PR diff for missing test coverage:
 

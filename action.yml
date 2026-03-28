@@ -1,5 +1,5 @@
-name: 'Autonomous Quality Pipeline'
-description: 'AI-powered multi-agent code review for pull requests'
+name: 'Argus'
+description: 'AI-powered multi-agent code review — every PR, every team member, same standard.'
 
 inputs:
   groq_api_key:
@@ -9,6 +9,10 @@ inputs:
     description: 'Automatically create a fix branch for critical issues'
     required: false
     default: 'false'
+  language:
+    description: 'Language for PR comments (en, tr, es, de...)'
+    required: false
+    default: 'en'
 
 runs:
   using: 'composite'
@@ -31,3 +35,4 @@ runs:
         PR_NUMBER: ${{ github.event.number }}
         USE_FAKE_DIFF: "false"
         AUTOFIX: ${{ inputs.autofix }}
+        LANGUAGE: ${{ inputs.language }}
