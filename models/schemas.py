@@ -40,15 +40,14 @@ class StyleReport(BaseModel):
 # --- Test Coverage ---
 
 class TestFinding(BaseModel):
-    missing_test: str        # What is not tested
+    missing_test: str
     severity: int
-    suggestion: str          # What test should be written
+    suggestion: str
 
 class TestReport(BaseModel):
     findings: List[TestFinding]
-    suggested_tests: str     # Actual test code as a string
     summary: str
-
+    
     # --- Debate ---
 
 class Conflict(BaseModel):
